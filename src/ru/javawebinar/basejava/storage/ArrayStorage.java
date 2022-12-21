@@ -17,7 +17,7 @@ public class ArrayStorage {
     }
 
     public void update(Resume r) {
-        int index = getIndexIfResumeExists(r.getUuid());
+        int index = getIndex(r.getUuid());
         if (index != -1) {
             storage[index] = r;
         } else {
@@ -26,11 +26,10 @@ public class ArrayStorage {
     }
 
     public void save(Resume r) {
-        if (size >= 10_000) {
-            System.out.println("storage is overflow. size = 10_000");
+        if (size >= storage.length) {
+            System.out.println("storage is overflow. max size = " + storage.length);
         } else {
-            int index = getIndexIfResumeExists(r.getUuid());
-            if (index != -1) {
+            if (getIndex(r.getUuid()) != -1) {
                 System.out.println("Resume with uuid = " + r.getUuid() + " already exists");
             } else {
                 storage[size] = r;
@@ -40,7 +39,7 @@ public class ArrayStorage {
     }
 
     public Resume get(String uuid) {
-        int index = getIndexIfResumeExists(uuid);
+        int index = getIndex(uuid);
         if (index != -1) {
             return storage[index];
         } else {
@@ -50,7 +49,7 @@ public class ArrayStorage {
     }
 
     public void delete(String uuid) {
-        int index = getIndexIfResumeExists(uuid);
+        int index = getIndex(uuid);
         if (index != -1) {
             System.arraycopy(storage, index + 1, storage, index, size - index - 1);
             storage[size - 1] = null;
@@ -71,7 +70,7 @@ public class ArrayStorage {
         return size;
     }
 
-    private int getIndexIfResumeExists(String uuid) {
+    private int getIndex(String uuid) {
         for (int i = 0; i < size; i++) {
             if (storage[i].getUuid().equals(uuid)) {
                 return i;
