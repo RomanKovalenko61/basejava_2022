@@ -40,7 +40,7 @@ public abstract class AbstractArrayStorage implements Storage {
             if (index >= 0) {
                 throw new ExistStorageException(r.getUuid());
             } else {
-                insertToStorage(index, r);
+                insertElement(index, r);
                 size++;
             }
         }
@@ -75,7 +75,7 @@ public abstract class AbstractArrayStorage implements Storage {
 
     protected abstract int getIndex(String uuid);
 
-    protected abstract void insertToStorage(int index, Resume r);
+    protected abstract void insertElement(int index, Resume r);
 
     protected abstract void fillDeletedElement(int index);
 }
