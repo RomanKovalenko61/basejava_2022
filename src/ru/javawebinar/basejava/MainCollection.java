@@ -20,6 +20,7 @@ public class MainCollection {
         collection.add(RESUME_1);
         collection.add(RESUME_2);
         collection.add(RESUME_3);
+        collection.add(null);
 
         for (Resume r : collection) {
             System.out.println(r);

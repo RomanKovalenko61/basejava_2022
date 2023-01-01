@@ -7,7 +7,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.util.Arrays;
 
-public abstract class AbstractArrayStorage implements Storage {
+public abstract class AbstractArrayStorage extends AbstractStorage {
 
     protected static final int STORAGE_LIMIT = 10_000;
 
@@ -72,8 +72,6 @@ public abstract class AbstractArrayStorage implements Storage {
     public Resume[] getAll() {
         return Arrays.copyOf(storage, size);
     }
-
-    protected abstract int getIndex(String uuid);
 
     protected abstract void insertElement(int index, Resume r);
 
