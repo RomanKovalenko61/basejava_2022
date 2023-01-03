@@ -46,7 +46,7 @@ public class MapStorage extends AbstractStorage {
     @Override
     public Resume[] getAll() {
         List<Resume> resumes = new ArrayList<>(map.values());
-        Collections.sort(resumes);
+        resumes.sort(Comparator.comparing(Resume::getUuid));
         return resumes.toArray(new Resume[0]);
     }
 

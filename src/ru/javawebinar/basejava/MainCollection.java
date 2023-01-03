@@ -20,14 +20,14 @@ public class MainCollection {
         collection.add(RESUME_1);
         collection.add(RESUME_2);
         collection.add(RESUME_3);
-        collection.add(null);
+//        collection.add(null);
 
-        for (Resume r : collection) {
-            System.out.println(r);
-            if (Objects.equals(r.getUuid(), UUID_1)) {
-//                collection.remove(r);
-            }
-        }
+//        for (Resume r : collection) {
+//            System.out.println(r);
+//            if (Objects.equals(r.getUuid(), UUID_1)) {
+////                collection.remove(r);
+//            }
+//        }
 
         Iterator<Resume> iterator = collection.iterator();
         while (iterator.hasNext()) {
@@ -54,5 +54,9 @@ public class MainCollection {
         for (Map.Entry<String, Resume> entry : map.entrySet()) {
             System.out.println(entry.getValue());
         }
+
+        List<Resume> resumes = Arrays.asList(RESUME_1, RESUME_2, RESUME_3);
+        resumes.remove(1);
+        System.out.println(resumes);
     }
 }
