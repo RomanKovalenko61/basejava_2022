@@ -6,7 +6,7 @@ import ru.javawebinar.basejava.model.Resume;
 
 import static org.junit.Assert.fail;
 
-public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
+public abstract class AbstractArrayStorageTest extends AbstractStorageTest {
     protected AbstractArrayStorageTest(Storage storage) {
         super(storage);
     }
@@ -15,11 +15,11 @@ public abstract class AbstractArrayStorageTest extends AbstractStorageTest{
     public void saveWithOverflow() {
         try {
             for (int i = 3; i < AbstractArrayStorage.STORAGE_LIMIT; i++) {
-                storage.save(new Resume());
+                storage.save(new Resume("fullName" + i));
             }
         } catch (StorageException e) {
             fail("overflow happened earlier");
         }
-        storage.save(new Resume());
+        storage.save(new Resume("Overflow"));
     }
 }
