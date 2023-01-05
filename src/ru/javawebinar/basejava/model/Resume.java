@@ -1,7 +1,8 @@
 package ru.javawebinar.basejava.model;
 
-import java.util.Objects;
-import java.util.UUID;
+import ru.javawebinar.basejava.model.DateListSection.DateSection;
+
+import java.util.*;
 
 /**
  * Initial resume class
@@ -12,6 +13,8 @@ public class Resume implements Comparable<Resume> {
     private final String uuid;
 
     private String fullName;
+
+    private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -36,17 +39,41 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
+    public void setStringSection(SectionType type, String str) {
+        sections.put(type, new StringSection(str));
+    }
+
+    public String getStringSection(SectionType type) {
+        return ((StringSection) sections.get(type)).getString();
+    }
+
+    public void setListSection(SectionType type, List<String> list) {
+        sections.put(type, new ListSection(list));
+    }
+
+    public List<String> getListSection(SectionType type) {
+        return ((ListSection) sections.get(type)).getList();
+    }
+
+    public void setDateListSection(SectionType type, List<DateSection> list) {
+        sections.put(type, new DateListSection(list));
+    }
+
+    public List<DateSection> getDateListSection(SectionType type) {
+        return ((DateListSection) sections.get(type)).getList();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName);
+        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName) && sections.equals(resume.sections);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName);
+        return Objects.hash(uuid, fullName, sections);
     }
 
     @Override
@@ -54,6 +81,7 @@ public class Resume implements Comparable<Resume> {
         return "Resume{" +
                 "uuid='" + uuid + '\'' +
                 ", fullName='" + fullName + '\'' +
+                ", sections=" + sections +
                 '}';
     }
 
