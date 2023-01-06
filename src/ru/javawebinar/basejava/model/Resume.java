@@ -1,8 +1,9 @@
 package ru.javawebinar.basejava.model;
 
-import ru.javawebinar.basejava.model.DateListSection.DateSection;
-
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Initial resume class
@@ -15,6 +16,7 @@ public class Resume implements Comparable<Resume> {
     private String fullName;
 
     private final Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+    private final Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
 
     public Resume(String fullName) {
         this(UUID.randomUUID().toString(), fullName);
@@ -39,28 +41,20 @@ public class Resume implements Comparable<Resume> {
         this.fullName = fullName;
     }
 
-    public void setStringSection(SectionType type, String str) {
-        sections.put(type, new StringSection(str));
+    public Section getSection(SectionType type) {
+        return sections.get(type);
     }
 
-    public String getStringSection(SectionType type) {
-        return ((StringSection) sections.get(type)).getString();
+    public void setSection(SectionType type, Section section) {
+        sections.put(type, section);
     }
 
-    public void setListSection(SectionType type, List<String> list) {
-        sections.put(type, new ListSection(list));
+    public void setContact(ContactType type, String contact) {
+        contacts.put(type, contact);
     }
 
-    public List<String> getListSection(SectionType type) {
-        return ((ListSection) sections.get(type)).getList();
-    }
-
-    public void setDateListSection(SectionType type, List<DateSection> list) {
-        sections.put(type, new DateListSection(list));
-    }
-
-    public List<DateSection> getDateListSection(SectionType type) {
-        return ((DateListSection) sections.get(type)).getList();
+    public String getContact(ContactType type) {
+        return contacts.get(type);
     }
 
     @Override
@@ -68,12 +62,12 @@ public class Resume implements Comparable<Resume> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Resume resume = (Resume) o;
-        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName) && sections.equals(resume.sections);
+        return uuid.equals(resume.uuid) && fullName.equals(resume.fullName) && sections.equals(resume.sections) && contacts.equals(resume.contacts);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, fullName, sections);
+        return Objects.hash(uuid, fullName, sections, contacts);
     }
 
     @Override
@@ -82,6 +76,7 @@ public class Resume implements Comparable<Resume> {
                 "uuid='" + uuid + '\'' +
                 ", fullName='" + fullName + '\'' +
                 ", sections=" + sections +
+                ", contacts=" + contacts +
                 '}';
     }
 

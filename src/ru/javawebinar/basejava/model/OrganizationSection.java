@@ -3,15 +3,15 @@ package ru.javawebinar.basejava.model;
 import java.util.List;
 import java.util.Objects;
 
-public class ListSection extends Section {
-    private final List<String> list;
+public class OrganizationSection extends Section {
+    private final List<Organization> list;
 
-    public ListSection(List<String> list) {
-        Objects.requireNonNull(list, "List sections must not be null");
+    public OrganizationSection(List<Organization> list) {
+        Objects.requireNonNull(list, "list organizations must not be null");
         this.list = list;
     }
 
-    public List<String> getList() {
+    public List<Organization> getList() {
         return list;
     }
 
@@ -19,7 +19,7 @@ public class ListSection extends Section {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ListSection that = (ListSection) o;
+        OrganizationSection that = (OrganizationSection) o;
         return list.equals(that.list);
     }
 
@@ -30,8 +30,9 @@ public class ListSection extends Section {
 
     @Override
     public String toString() {
-        return "ListSection{" +
+        return "OrganizationSection{" +
                 "list=" + list +
                 '}';
     }
 }
+
