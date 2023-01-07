@@ -44,5 +44,20 @@ public class MainFile {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        File f = new File("D:\\Projects\\basejava_2022\\src\\ru\\javawebinar");
+        printListFiles(f);
+    }
+
+    private static void printListFiles(File file) {
+        System.out.println("Directory " + file.getName());
+        for (File f : file.listFiles()) {
+            if (f.isDirectory()) {
+                printListFiles(f);
+            } else {
+                System.out.println("File " + f.getName());
+            }
+        }
     }
 }
+

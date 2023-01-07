@@ -1,8 +1,10 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.util.DateUtil;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,7 +12,28 @@ import static ru.javawebinar.basejava.model.SectionType.*;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume resume = new Resume("Roman K");
+        Resume resume = getResume("UUID", "Roman Kovalenko");
+        System.out.println(resume);
+
+        System.out.println("--------------------------------------------");
+        System.out.println("formatted resume");
+        System.out.println("-----------------BEGIN RESUME------------------------------");
+        System.out.println("Resume uuid: " + resume.getUuid());
+        System.out.println("Resume fullname: " + resume.getFullName());
+        System.out.println("-----------------CONTACTS------------------------------");
+        printContacts(resume);
+        System.out.println("-----------------SECTIONS------------------------------");
+        printSection(resume, PERSONAL);
+        printSection(resume, OBJECTIVE);
+        printSection(resume, ACHIEVEMENT);
+        printSection(resume, QUALIFICATION);
+        printSection(resume, EDUCATION);
+        printSection(resume, EXPERIENCE);
+        System.out.println("-----------------END RESUME------------------------------");
+    }
+
+    public static Resume getResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
 
         resume.setSection(PERSONAL, new StringSection("personal"));
         resume.setSection(OBJECTIVE, new StringSection("objective"));
@@ -30,57 +53,51 @@ public class ResumeTestData {
         resume.setSection(QUALIFICATION, new ListSection(qualifications));
 
         List<Organization> educations = new ArrayList<>();
-        educations.add(new Organization(
-                "javaops",
-                "javaops.ru",
+        Organization edu1 = new Organization("javaops", "javaops.ru");
+        edu1.addNote(new OrganizationNote(
                 LocalDate.of(2022, 10, 1),
                 LocalDate.of(2022, 12, 31),
                 "trainee",
                 "studying java"));
-        educations.add(new Organization(
-                "topjava",
-                "topjava.ru",
+        Organization edu2 = new Organization("javaops", "javaops.ru");
+        edu2.addNote(new OrganizationNote(
                 LocalDate.of(2023, 1, 1),
                 LocalDate.of(2023, 4, 30),
                 "trainee",
                 "studying advanced java"));
+        educations.add(edu1);
+        educations.add(edu2);
         resume.setSection(EDUCATION, new OrganizationSection(educations));
 
         List<Organization> experiences = new ArrayList<>();
-        experiences.add(new Organization(
-                "sber",
-                "sber.ru",
-                LocalDate.of(2012, 10, 1),
+        Organization exp1 = new Organization("almaz", "almaz.ru");
+        exp1.addNote(new OrganizationNote(
+                DateUtil.of(2012, Month.JANUARY),
+                LocalDate.of(2013, 12, 31),
+                "junior engineer",
+                "engineer work"));
+        exp1.addNote(new OrganizationNote(
+                DateUtil.of(2014, Month.JANUARY),
+                LocalDate.of(2022, 10, 1),
+                "senior engineer",
+                "another work"));
+        Organization exp2 = new Organization("sber", "sber.ru");
+        exp2.addNote(new OrganizationNote(
+                LocalDate.of(2022, 10, 1),
                 LocalDate.of(2022, 12, 31),
                 "software engineer",
-                "work"));
-        experiences.add(new Organization(
-                "tinkoff",
-                "tinkoff.ru",
-                LocalDate.of(2023, 1, 1),
+                null));
+        Organization exp3 = new Organization("tinkoff", "tinkoff.ru");
+        exp3.addNote(new OrganizationNote(
+                DateUtil.of(2023, Month.JANUARY),
                 LocalDate.of(2023, 12, 30),
                 "programmer",
-                "another work"));
+                null));
+        experiences.add(exp1);
+        experiences.add(exp2);
+        experiences.add(exp3);
         resume.setSection(EXPERIENCE, new OrganizationSection(experiences));
-
-        System.out.println(resume);
-
-        System.out.println("--------------------------------------------");
-        System.out.println("formatted resume");
-        System.out.println("-----------------BEGIN RESUME------------------------------");
-        System.out.println("");
-        System.out.println("Resume uuid: " + resume.getUuid());
-        System.out.println("Resume fullname: " + resume.getFullName());
-        System.out.println("-----------------CONTACTS------------------------------");
-        printContacts(resume);
-        System.out.println("-----------------SECTIONS------------------------------");
-        printSection(resume, PERSONAL);
-        printSection(resume, OBJECTIVE);
-        printSection(resume, ACHIEVEMENT);
-        printSection(resume, QUALIFICATION);
-        printSection(resume, EDUCATION);
-        printSection(resume, EXPERIENCE);
-        System.out.println("-----------------END RESUME------------------------------");
+        return resume;
     }
 
     private static void printSection(Resume resume, SectionType type) {
@@ -99,14 +116,15 @@ public class ResumeTestData {
             case EDUCATION:
             case EXPERIENCE:
                 System.out.println(type.getTitle() + ": ");
-                System.out.println("*******************************");
                 for (Organization section : ((OrganizationSection) resume.getSection(type)).getList()) {
 
                     System.out.println("Company:  " + section.getHomePage());
-                    System.out.println("Date from " + section.getWith());
-                    System.out.println("Date to " + section.getTo());
-                    System.out.println("Title:  " + section.getTitle());
-                    System.out.println("Description:  " + section.getDescription());
+                    for (OrganizationNote note : section.getNotes()) {
+                        System.out.println("Date from " + note.getWith());
+                        System.out.println("Date to " + note.getTo());
+                        System.out.println("Title:  " + note.getTitle());
+                        System.out.println("Description:  " + note.getDescription());
+                    }
                     System.out.println("_ _ _ _ _ _ _ _ _ _ _ _ _ _ ");
                 }
                 System.out.println("*******************************");

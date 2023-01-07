@@ -9,7 +9,6 @@ import ru.javawebinar.basejava.model.Resume;
 import java.util.Arrays;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertSame;
 
 public abstract class AbstractStorageTest {
 
@@ -18,19 +17,23 @@ public abstract class AbstractStorageTest {
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";
+    private static final String UUID_4 = "uuid4";
 
     private static final String FULL_NAME_1 = "Alex Smith";
     private static final String FULL_NAME_2 = "Boris Blade";
     private static final String FULL_NAME_3 = "Roman Smith";
+    private static final String FULL_NAME_4 = "fullname";
 
     private static final Resume RESUME_1;
     private static final Resume RESUME_2;
     private static final Resume RESUME_3;
+    private static final Resume RESUME_4;
 
     static {
-        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
-        RESUME_2 = new Resume(UUID_2, FULL_NAME_2);
-        RESUME_3 = new Resume(UUID_3, FULL_NAME_3);
+        RESUME_1 = ResumeTestData.getResume(UUID_1, FULL_NAME_1);
+        RESUME_2 = ResumeTestData.getResume(UUID_2, FULL_NAME_2);
+        RESUME_3 = ResumeTestData.getResume(UUID_3, FULL_NAME_3);
+        RESUME_4 = ResumeTestData.getResume(UUID_4, FULL_NAME_4);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -58,24 +61,22 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void update() {
-        Resume resume = new Resume("uuid4", "fullname");
-        storage.save(resume);
-        resume.setFullName("other fullname");
-        storage.update(resume);
-        assertSame(storage.get(resume.getUuid()), resume);
+        storage.save(RESUME_4);
+        RESUME_4.setFullName("other fullname");
+        storage.update(RESUME_4);
+        assertEquals(storage.get(RESUME_4.getUuid()), RESUME_4);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(new Resume("dummy"));
+        storage.update(ResumeTestData.getResume("uuid", "dummy"));
     }
 
     @Test
     public void save() {
-        Resume resume = new Resume("uuid4", "fullname");
-        storage.save(resume);
+        storage.save(RESUME_4);
         assertSize(4);
-        assertSame(resume, storage.get(resume.getUuid()));
+        assertEquals(RESUME_4, storage.get(RESUME_4.getUuid()));
     }
 
     @Test(expected = ExistStorageException.class)
@@ -85,9 +86,9 @@ public abstract class AbstractStorageTest {
 
     @Test
     public void get() {
-        assertSame(RESUME_1, storage.get(RESUME_1.getUuid()));
-        assertSame(RESUME_2, storage.get(RESUME_2.getUuid()));
-        assertSame(RESUME_3, storage.get(RESUME_3.getUuid()));
+        assertEquals(RESUME_1, storage.get(RESUME_1.getUuid()));
+        assertEquals(RESUME_2, storage.get(RESUME_2.getUuid()));
+        assertEquals(RESUME_3, storage.get(RESUME_3.getUuid()));
     }
 
     @Test(expected = NotExistStorageException.class)
