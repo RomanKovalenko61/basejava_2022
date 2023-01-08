@@ -49,13 +49,18 @@ public class MainFile {
         printListFiles(f);
     }
 
+    // TODO: make pretty output
     private static void printListFiles(File file) {
-        System.out.println("Directory " + file.getName());
-        for (File f : file.listFiles()) {
-            if (f.isDirectory()) {
-                printListFiles(f);
-            } else {
-                System.out.println("File " + f.getName());
+        File[] files = file.listFiles();
+
+        if (files != null) {
+            for (File f : files) {
+                if (f.isFile()) {
+                    System.out.println("File: " + f.getName());
+                } else {
+                    System.out.println("Directory: " + f.getName());
+                    printListFiles(f);
+                }
             }
         }
     }

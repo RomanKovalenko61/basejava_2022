@@ -54,13 +54,13 @@ public class ResumeTestData {
 
         List<Organization> educations = new ArrayList<>();
         Organization edu1 = new Organization("javaops", "javaops.ru");
-        edu1.addNote(new OrganizationNote(
+        edu1.addNote(new Organization.Position(
                 LocalDate.of(2022, 10, 1),
                 LocalDate.of(2022, 12, 31),
                 "trainee",
                 "studying java"));
         Organization edu2 = new Organization("javaops", "javaops.ru");
-        edu2.addNote(new OrganizationNote(
+        edu2.addNote(new Organization.Position(
                 LocalDate.of(2023, 1, 1),
                 LocalDate.of(2023, 4, 30),
                 "trainee",
@@ -71,26 +71,26 @@ public class ResumeTestData {
 
         List<Organization> experiences = new ArrayList<>();
         Organization exp1 = new Organization("almaz", "almaz.ru");
-        exp1.addNote(new OrganizationNote(
+        exp1.addNote(new Organization.Position(
                 DateUtil.of(2012, Month.JANUARY),
                 LocalDate.of(2013, 12, 31),
                 "junior engineer",
                 "engineer work"));
-        exp1.addNote(new OrganizationNote(
+        exp1.addNote(new Organization.Position(
                 DateUtil.of(2014, Month.JANUARY),
                 LocalDate.of(2022, 10, 1),
                 "senior engineer",
                 "another work"));
         Organization exp2 = new Organization("sber", "sber.ru");
-        exp2.addNote(new OrganizationNote(
+        exp2.addNote(new Organization.Position(
                 LocalDate.of(2022, 10, 1),
                 LocalDate.of(2022, 12, 31),
                 "software engineer",
                 null));
         Organization exp3 = new Organization("tinkoff", "tinkoff.ru");
-        exp3.addNote(new OrganizationNote(
+        exp3.addNote(new Organization.Position(
                 DateUtil.of(2023, Month.JANUARY),
-                LocalDate.of(2023, 12, 30),
+                DateUtil.NOW,
                 "programmer",
                 null));
         experiences.add(exp1);
@@ -119,7 +119,7 @@ public class ResumeTestData {
                 for (Organization section : ((OrganizationSection) resume.getSection(type)).getList()) {
 
                     System.out.println("Company:  " + section.getHomePage());
-                    for (OrganizationNote note : section.getNotes()) {
+                    for (Organization.Position note : section.getNotes()) {
                         System.out.println("Date from " + note.getWith());
                         System.out.println("Date to " + note.getTo());
                         System.out.println("Title:  " + note.getTitle());
