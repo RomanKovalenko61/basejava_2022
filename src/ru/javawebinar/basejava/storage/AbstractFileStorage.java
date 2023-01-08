@@ -13,7 +13,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     protected abstract void doWrite(Resume r, OutputStream outputStream) throws IOException;
 
-    protected abstract Resume doRead(InputStream inputStream) throws IOException, ClassNotFoundException;
+    protected abstract Resume doRead(InputStream inputStream) throws IOException;
 
     public AbstractFileStorage(File directory) {
         Objects.requireNonNull(directory, "directory mist not be null");
@@ -66,7 +66,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     protected Resume doGet(File file) {
         try {
             return doRead(new BufferedInputStream(new FileInputStream(file)));
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             throw new StorageException("File read error ", file.getName(), e);
         }
     }
