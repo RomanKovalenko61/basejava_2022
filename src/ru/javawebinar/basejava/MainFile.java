@@ -46,20 +46,20 @@ public class MainFile {
         }
 
         File f = new File("D:\\Projects\\basejava_2022\\src\\ru\\javawebinar");
-        printListFiles(f);
+        printListFiles(f, "");
     }
 
-    // TODO: make pretty output
-    private static void printListFiles(File file) {
+
+    private static void printListFiles(File file, String offset) {
         File[] files = file.listFiles();
 
         if (files != null) {
             for (File f : files) {
                 if (f.isFile()) {
-                    System.out.println("File: " + f.getName());
+                    System.out.println(offset + "File: " + f.getName());
                 } else {
-                    System.out.println("Directory: " + f.getName());
-                    printListFiles(f);
+                    System.out.println(offset + "Directory: " + f.getName());
+                    printListFiles(f, offset + "   ");
                 }
             }
         }
