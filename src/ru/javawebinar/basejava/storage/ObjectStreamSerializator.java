@@ -5,20 +5,16 @@ import ru.javawebinar.basejava.model.Resume;
 
 import java.io.*;
 
-public class ObjectStreamStorage extends AbstractFileStorage {
-    public ObjectStreamStorage(File directory) {
-        super(directory);
-    }
-
+public class ObjectStreamSerializator implements SerializationStrategy {
     @Override
-    protected void doWrite(Resume r, OutputStream outputStream) throws IOException {
+    public void doWrite(Resume r, OutputStream outputStream) throws IOException {
         try (ObjectOutputStream oos = new ObjectOutputStream(outputStream)) {
             oos.writeObject(r);
         }
     }
 
     @Override
-    protected Resume doRead(InputStream inputStream) throws IOException {
+    public Resume doRead(InputStream inputStream) throws IOException {
         try (ObjectInputStream ois = new ObjectInputStream(inputStream)) {
             return (Resume) ois.readObject();
         } catch (ClassNotFoundException e) {
