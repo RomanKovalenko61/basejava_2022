@@ -54,6 +54,14 @@ public class Resume implements Serializable, Comparable<Resume> {
         this.fullName = fullName;
     }
 
+    public Map<SectionType, Section> getSections() {
+        return sections;
+    }
+
+    public Map<ContactType, String> getContacts() {
+        return contacts;
+    }
+
     public Section getSection(SectionType type) {
         return sections.get(type);
     }
