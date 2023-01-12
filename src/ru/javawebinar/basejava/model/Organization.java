@@ -1,17 +1,26 @@
 package ru.javawebinar.basejava.model;
 
+import ru.javawebinar.basejava.util.LocalDateAdapter;
+
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+@XmlAccessorType(XmlAccessType.FIELD)
 public class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
 
-    private final Link homePage;
+    private Link homePage;
 
     private final List<Position> notes = new ArrayList<>();
+
+    public Organization() {
+    }
 
     public Organization(String name, String url) {
         this.homePage = new Link(name, url);
@@ -50,13 +59,18 @@ public class Organization implements Serializable {
                 '}';
     }
 
+    @XmlAccessorType(XmlAccessType.FIELD)
     public static class Position implements Serializable {
         private static final long serialVersionUID = 1L;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate with;
+        @XmlJavaTypeAdapter(LocalDateAdapter.class)
+        private LocalDate to;
+        private String title;
+        private String description;
 
-        private final LocalDate with;
-        private final LocalDate to;
-        private final String title;
-        private final String description;
+        public Position() {
+        }
 
         public Position(LocalDate with, LocalDate to, String title, String description) {
             Objects.requireNonNull(with, "date with must not be null");
