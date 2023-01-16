@@ -17,7 +17,7 @@ public class Organization implements Serializable {
 
     private Link homePage;
 
-    private final List<Position> notes = new ArrayList<>();
+    private final List<Position> positions = new ArrayList<>();
 
     public Organization() {
     }
@@ -30,12 +30,12 @@ public class Organization implements Serializable {
         return homePage;
     }
 
-    public List<Position> getNotes() {
-        return notes;
+    public List<Position> getPositions() {
+        return positions;
     }
 
-    public void addNote(Position note) {
-        notes.add(note);
+    public void addPosition(Position position) {
+        positions.add(position);
     }
 
     @Override
@@ -43,19 +43,19 @@ public class Organization implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return homePage.equals(that.homePage) && notes.equals(that.notes);
+        return homePage.equals(that.homePage) && positions.equals(that.positions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(homePage, notes);
+        return Objects.hash(homePage, positions);
     }
 
     @Override
     public String toString() {
         return "Organization{" +
                 "homePage=" + homePage +
-                ", notes=" + notes +
+                ", positions=" + positions +
                 '}';
     }
 
@@ -102,13 +102,16 @@ public class Organization implements Serializable {
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
-            Position note = (Position) o;
-            return with.equals(note.with) && to.equals(note.to) && title.equals(note.title) && Objects.equals(description, note.description);
+            Position position = (Position) o;
+            return with.equals(position.with) &&
+                    to.equals(position.to) &&
+                    title.equals(position.title) &&
+                    Objects.equals(description, position.description);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(with, to, title);
+            return Objects.hash(with, to, title, description);
         }
 
         @Override
