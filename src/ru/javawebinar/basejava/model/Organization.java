@@ -17,13 +17,18 @@ public class Organization implements Serializable {
 
     private Link homePage;
 
-    private final List<Position> positions = new ArrayList<>();
+    private List<Position> positions = new ArrayList<>();
 
     public Organization() {
     }
 
     public Organization(String name, String url) {
         this.homePage = new Link(name, url);
+    }
+
+    public Organization(Link homePage, List<Position> positions) {
+        this.homePage = homePage;
+        this.positions = positions;
     }
 
     public Link getHomePage() {
@@ -79,7 +84,7 @@ public class Organization implements Serializable {
             this.with = with;
             this.to = to;
             this.title = title;
-            this.description = description;
+            this.description = description == null ? "" : description;
         }
 
         public LocalDate getWith() {
@@ -95,7 +100,7 @@ public class Organization implements Serializable {
         }
 
         public String getDescription() {
-            return description == null ? "" : description;
+            return description;
         }
 
         @Override
