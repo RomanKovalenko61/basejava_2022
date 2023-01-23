@@ -3,7 +3,9 @@ package ru.javawebinar.basejava;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
+
+import static java.util.stream.Collectors.partitioningBy;
 
 public class MainStream {
     public static void main(String[] args) {
@@ -27,12 +29,10 @@ public class MainStream {
     }
 
     private static List<Integer> oddOrEven(List<Integer> integers) {
-        int sum = integers.stream().reduce(0, Integer::sum);
-        System.out.println("sum all numbers = " + sum);
-        if (sum % 2 == 0) {
-            return integers.stream().filter(x -> x % 2 != 0).collect(Collectors.toList());
-        } else {
-            return integers.stream().filter(x -> x % 2 == 0).collect(Collectors.toList());
-        }
+        final Integer[] sum = {0};
+        Map<Boolean, List<Integer>> collect = integers.stream().peek(e -> sum[0] += e)
+                .collect(partitioningBy(x -> x % 2 == 0));
+        System.out.println("sum all numbers = " + sum[0]);
+        return collect.get(sum[0] % 2 != 0);
     }
 }
