@@ -12,7 +12,7 @@ import static ru.javawebinar.basejava.model.SectionType.*;
 
 public class ResumeTestData {
     public static void main(String[] args) {
-        Resume resume = getResume("UUID", "Roman Kovalenko");
+        Resume resume = getResume("Roman Kovalenko");
         System.out.println(resume);
 
         System.out.println("--------------------------------------------");
@@ -32,8 +32,8 @@ public class ResumeTestData {
         System.out.println("-----------------END RESUME------------------------------");
     }
 
-    public static Resume getResume(String uuid, String fullName) {
-        Resume resume = new Resume(uuid, fullName);
+    public static Resume getResume(String fullName) {
+        Resume resume = new Resume(fullName);
 
         resume.setSection(PERSONAL, new StringSection("personal"));
         resume.setSection(OBJECTIVE, new StringSection("objective"));
@@ -97,6 +97,31 @@ public class ResumeTestData {
         experiences.add(exp2);
         experiences.add(exp3);
         resume.setSection(EXPERIENCE, new OrganizationSection(experiences));
+        return resume;
+    }
+
+    public static Resume getResumeWithOnlyFullContactsSection(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+
+        resume.setContact(ContactType.PHONE, "phone");
+        resume.setContact(ContactType.MOBILE, "mobile");
+        resume.setContact(ContactType.HOME_PHONE, "home_phone");
+        resume.setContact(ContactType.SKYPE, "skype");
+        resume.setContact(ContactType.MAIL, "mail");
+        resume.setContact(ContactType.LINKEDIN, "linkeddin");
+        resume.setContact(ContactType.GITHUB, "github");
+        resume.setContact(ContactType.STACKOVERFLOW, "stackoverflow");
+        resume.setContact(ContactType.HOME_PAGE, "homepage");
+
+        return resume;
+    }
+
+    public static Resume getResumeWithOnlyPartContactsSection(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
+
+        resume.setContact(ContactType.PHONE, "+78002225888");
+        resume.setContact(ContactType.MAIL, "mail@mail");
+
         return resume;
     }
 

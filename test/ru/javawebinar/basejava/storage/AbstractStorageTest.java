@@ -5,6 +5,7 @@ import org.junit.Test;
 import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 
 import java.io.File;
@@ -35,9 +36,9 @@ public abstract class AbstractStorageTest {
 
     static {
         RESUME_1 = new Resume(UUID_1, FULL_NAME_1); // RESUME_1 = ResumeTestData.getResume(UUID_1, FULL_NAME_1);
-        RESUME_2 = new Resume(UUID_2, FULL_NAME_2); // RESUME_2 = ResumeTestData.getResume(UUID_2, FULL_NAME_2);
-        RESUME_3 = new Resume(UUID_3, FULL_NAME_3); // RESUME_3 = ResumeTestData.getResume(UUID_3, FULL_NAME_3);
-        RESUME_4 = new Resume(UUID_4, FULL_NAME_4); // RESUME_4 = ResumeTestData.getResume(UUID_4, FULL_NAME_4);
+        RESUME_2 = ResumeTestData.getResumeWithOnlyPartContactsSection(UUID_2, FULL_NAME_2);
+        RESUME_3 = ResumeTestData.getResumeWithOnlyFullContactsSection(UUID_3, FULL_NAME_3);
+        RESUME_4 = ResumeTestData.getResumeWithOnlyPartContactsSection(UUID_4, FULL_NAME_4);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -67,13 +68,14 @@ public abstract class AbstractStorageTest {
     public void update() {
         storage.save(RESUME_4);
         RESUME_4.setFullName("other fullname");
+        RESUME_4.setContact(ContactType.MAIL, "another@mail.ru");
         storage.update(RESUME_4);
         assertEquals(storage.get(RESUME_4.getUuid()), RESUME_4);
     }
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(ResumeTestData.getResume("uuid", "dummy"));
+        storage.update(ResumeTestData.getResume("dummy"));
     }
 
     @Test
