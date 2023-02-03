@@ -64,7 +64,12 @@ public class SqlStorage implements Storage {
                     if (!rs.next()) {
                         throw new NotExistStorageException(uuid);
                     }
-                    return read(rs).get(uuid);
+                    Resume r = new Resume(uuid, rs.getString("full_name"));
+                    do {
+                        addContacts(rs, r);
+                    } while (rs.next());
+
+                    return r;
                 });
     }
 
@@ -109,17 +114,12 @@ public class SqlStorage implements Storage {
         Map<String, Resume> resumeMap = new LinkedHashMap<>();
         do {
             String uuid = rs.getString("uuid");
-            Resume temp = resumeMap.get(uuid);
-            if (temp == null) {
-                temp = new Resume(uuid, rs.getString("full_name"));
+            Resume r = resumeMap.get(uuid);
+            if (r == null) {
+                r = new Resume(uuid, rs.getString("full_name"));
+                resumeMap.put(uuid, r);
             }
-            String t = rs.getString("type");
-            if (t != null) {
-                ContactType type = ContactType.valueOf(t);
-                String value = rs.getString("value");
-                temp.setContact(type, value);
-            }
-            resumeMap.put(uuid, temp);
+            addContacts(rs, r);
         } while (rs.next());
         return resumeMap;
     }
@@ -134,6 +134,13 @@ public class SqlStorage implements Storage {
                 ps.addBatch();
             }
             ps.executeBatch();
+        }
+    }
+
+    private void addContacts(ResultSet rs, Resume r) throws SQLException {
+        String value = rs.getString("value");
+        if (value != null) {
+            r.setContact(ContactType.valueOf(rs.getString("type")), value);
         }
     }
 
