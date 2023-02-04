@@ -7,6 +7,8 @@ import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.SectionType;
+import ru.javawebinar.basejava.model.StringSection;
 
 import java.io.File;
 import java.util.Arrays;
@@ -36,9 +38,9 @@ public abstract class AbstractStorageTest {
 
     static {
         RESUME_1 = new Resume(UUID_1, FULL_NAME_1); // RESUME_1 = ResumeTestData.getResume(UUID_1, FULL_NAME_1);
-        RESUME_2 = ResumeTestData.getResumeWithOnlyPartContactsSection(UUID_2, FULL_NAME_2);
-        RESUME_3 = ResumeTestData.getResumeWithOnlyFullContactsSection(UUID_3, FULL_NAME_3);
-        RESUME_4 = ResumeTestData.getResumeWithOnlyPartContactsSection(UUID_4, FULL_NAME_4);
+        RESUME_2 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_2, FULL_NAME_2);
+        RESUME_3 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_3, FULL_NAME_3);
+        RESUME_4 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_4, FULL_NAME_4);
     }
 
     protected AbstractStorageTest(Storage storage) {
@@ -69,6 +71,7 @@ public abstract class AbstractStorageTest {
         storage.save(RESUME_4);
         RESUME_4.setFullName("other fullname");
         RESUME_4.setContact(ContactType.MAIL, "another@mail.ru");
+        RESUME_4.setSection(SectionType.OBJECTIVE, new StringSection("another objective"));
         storage.update(RESUME_4);
         assertEquals(storage.get(RESUME_4.getUuid()), RESUME_4);
     }

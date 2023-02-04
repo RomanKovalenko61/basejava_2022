@@ -125,6 +125,30 @@ public class ResumeTestData {
         return resume;
     }
 
+    public static Resume getResumeWithoutOrganizationSection(String uuid, String fullName) {
+        Resume resume = new Resume(fullName);
+
+        resume.setSection(PERSONAL, new StringSection("personal section"));
+        resume.setSection(OBJECTIVE, new StringSection("objective section"));
+        resume.setContact(ContactType.GITHUB, "github account");
+        resume.setContact(ContactType.PHONE, "phone number");
+        resume.setContact(ContactType.MAIL, "mail address");
+
+        List<String> achievements = new ArrayList<>();
+        achievements.add("achievements1");
+        achievements.add("achievements2");
+        achievements.add("achievements3");
+        resume.setSection(ACHIEVEMENT, new ListSection(achievements));
+
+        List<String> qualifications = new ArrayList<>();
+        qualifications.add("qualifications1");
+        qualifications.add("qualifications2");
+        qualifications.add("qualifications3");
+        resume.setSection(QUALIFICATION, new ListSection(qualifications));
+
+        return resume;
+    }
+
     private static void printSection(Resume resume, SectionType type) {
         switch (type) {
             case PERSONAL:
