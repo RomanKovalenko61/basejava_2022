@@ -1,24 +1,25 @@
 package ru.javawebinar.basejava.web;
 
 import ru.javawebinar.basejava.Config;
+import ru.javawebinar.basejava.model.ContactType;
 import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.storage.Storage;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
 import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
 
-    public void init() {
-        try {
-            Class.forName("org.postgresql.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        }
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        super.init(config);
         storage = Config.getInstance().getStorage();
     }
 
@@ -32,18 +33,32 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         response.setCharacterEncoding("UTF-8");
         response.setContentType("text/html; charset=UTF-8");
+        Writer writer = response.getWriter();
         List<Resume> list = storage.getAllSorted();
-        response.getWriter().write("<table>");
-        response.getWriter().write("<tr>");
-        response.getWriter().write("<th>uuid</th>");
-        response.getWriter().write("<th>fullName</th>");
-        response.getWriter().write("</tr>");
-        for (Resume r : list) {
-            response.getWriter().write("<tr>");
-            response.getWriter().write("<td>" + r.getUuid() + "</td>");
-            response.getWriter().write("<td>" + r.getFullName() + "</td>");
-            response.getWriter().write("<tr>");
+        writer.write(
+                "<html>\n" +
+                        "<head>\n" +
+                        "    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\">\n" +
+                        "    <link rel=\"stylesheet\" href=\"css/style.css\">\n" +
+                        "    <title>Список всех резюме</title>\n" +
+                        "</head>\n" +
+                        "<body>\n" +
+                        "<section>\n" +
+                        "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">\n" +
+                        "    <tr>\n" +
+                        "        <th>Имя</th>\n" +
+                        "        <th>Email</th>\n" +
+                        "    </tr>\n");
+        for (Resume resume : storage.getAllSorted()) {
+            writer.write(
+                    "<tr>\n" +
+                            "     <td><a href=\"resume?uuid=" + resume.getUuid() + "\">" + resume.getFullName() + "</a></td>\n" +
+                            "     <td>" + resume.getContact(ContactType.MAIL) + "</td>\n" +
+                            "</tr>\n");
         }
-        response.getWriter().write("</table>");
+        writer.write("</table>\n" +
+                "</section>\n" +
+                "</body>\n" +
+                "</html>\n");
     }
 }
