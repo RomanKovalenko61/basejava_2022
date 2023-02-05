@@ -1,11 +1,18 @@
 package ru.javawebinar.basejava.storage;
 
 import ru.javawebinar.basejava.exception.NotExistStorageException;
-import ru.javawebinar.basejava.model.*;
+import ru.javawebinar.basejava.model.ContactType;
+import ru.javawebinar.basejava.model.Resume;
+import ru.javawebinar.basejava.model.Section;
+import ru.javawebinar.basejava.model.SectionType;
 import ru.javawebinar.basejava.sql.SqlHelper;
+import ru.javawebinar.basejava.util.JsonParser;
 
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 public class SqlStorage implements Storage {
     private final SqlHelper sqlHelper;
@@ -30,8 +37,8 @@ public class SqlStorage implements Storage {
                     throw new NotExistStorageException(r.getUuid());
                 }
             }
-            deleteContacts(r);
-            deleteSection(r);
+            deleteAttributes(conn, r, "DELETE FROM section WHERE resume_uuid=?");
+            deleteAttributes(conn, r, "DELETE FROM contact WHERE resume_uuid=?");
             insertContacts(conn, r);
             insertSection(conn, r);
             return null;
@@ -170,37 +177,13 @@ public class SqlStorage implements Storage {
                      conn.prepareStatement("INSERT INTO section (resume_uuid, type, value) VALUES (?,?,?)")) {
             for (Map.Entry<SectionType, Section> e : r.getSections().entrySet()) {
                 ps.setString(1, r.getUuid());
-                SectionType type = e.getKey();
-                ps.setString(2, type.name());
-                switch (type) {
-                    case PERSONAL:
-                    case OBJECTIVE:
-                        ps.setString(3, ((StringSection) e.getValue()).getString());
-                        break;
-                    case ACHIEVEMENT:
-                    case QUALIFICATION:
-                        ps.setString(3, convert(((ListSection) e.getValue())));
-                        break;
-                }
+                ps.setString(2, e.getKey().name());
+                Section section = e.getValue();
+                ps.setString(3, JsonParser.write(section, Section.class));
                 ps.addBatch();
             }
             ps.executeBatch();
         }
-    }
-
-    private String convert(ListSection section) {
-        StringBuilder sb = new StringBuilder();
-        List<String> list = section.getList();
-        for (String str : list) {
-            sb.append(str);
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    private List<String> convert(String str) {
-        String[] strings = str.split("\n");
-        return Arrays.asList(strings);
     }
 
     private void addContacts(ResultSet rs, Resume r) throws SQLException {
@@ -214,32 +197,14 @@ public class SqlStorage implements Storage {
         String value = rs.getString("value");
         if (value != null) {
             SectionType type = SectionType.valueOf(rs.getString("type"));
-            switch (type) {
-                case OBJECTIVE:
-                case PERSONAL:
-                    r.setSection(type, new StringSection(value));
-                    break;
-                case ACHIEVEMENT:
-                case QUALIFICATION:
-                    r.setSection(type, new ListSection(convert(value)));
-                    break;
-            }
+            r.setSection(type, JsonParser.read(value, Section.class));
         }
     }
 
-    private void deleteContacts(Resume r) {
-        sqlHelper.<Void>execute("DELETE FROM contact WHERE resume_uuid=?", ps -> {
+    private void deleteAttributes(Connection conn, Resume r, String sql) throws SQLException {
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setString(1, r.getUuid());
             ps.execute();
-            return null;
-        });
-    }
-
-    private void deleteSection(Resume r) {
-        sqlHelper.<Void>execute("DELETE FROM section WHERE resume_uuid=?", ps -> {
-            ps.setString(1, r.getUuid());
-            ps.execute();
-            return null;
-        });
+        }
     }
 }

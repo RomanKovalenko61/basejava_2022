@@ -6,42 +6,19 @@ import ru.javawebinar.basejava.Config;
 import ru.javawebinar.basejava.exception.ExistStorageException;
 import ru.javawebinar.basejava.exception.NotExistStorageException;
 import ru.javawebinar.basejava.model.ContactType;
-import ru.javawebinar.basejava.model.Resume;
 import ru.javawebinar.basejava.model.SectionType;
 import ru.javawebinar.basejava.model.StringSection;
 
 import java.io.File;
 import java.util.Arrays;
-import java.util.UUID;
 
 import static org.junit.Assert.assertEquals;
+import static ru.javawebinar.basejava.storage.ResumeTestData.*;
 
 public abstract class AbstractStorageTest {
     protected static final File STORAGE_DIR = Config.getInstance().getStorageDir();
 
     protected final Storage storage;
-
-    private static final String UUID_1 = UUID.randomUUID().toString();
-    private static final String UUID_2 = UUID.randomUUID().toString();
-    private static final String UUID_3 = UUID.randomUUID().toString();
-    private static final String UUID_4 = UUID.randomUUID().toString();
-
-    private static final String FULL_NAME_1 = "Alex Smith";
-    private static final String FULL_NAME_2 = "Boris Blade";
-    private static final String FULL_NAME_3 = "Roman Smith";
-    private static final String FULL_NAME_4 = "fullname";
-
-    private static final Resume RESUME_1;
-    private static final Resume RESUME_2;
-    private static final Resume RESUME_3;
-    private static final Resume RESUME_4;
-
-    static {
-        RESUME_1 = new Resume(UUID_1, FULL_NAME_1); // RESUME_1 = ResumeTestData.getResume(UUID_1, FULL_NAME_1);
-        RESUME_2 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_2, FULL_NAME_2);
-        RESUME_3 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_3, FULL_NAME_3);
-        RESUME_4 = ResumeTestData.getResumeWithoutOrganizationSection(UUID_4, FULL_NAME_4);
-    }
 
     protected AbstractStorageTest(Storage storage) {
         this.storage = storage;
@@ -78,7 +55,7 @@ public abstract class AbstractStorageTest {
 
     @Test(expected = NotExistStorageException.class)
     public void updateNotExist() {
-        storage.update(ResumeTestData.getResume("dummy"));
+        storage.update(ResumeTestData.getResume("dummy", "dummy"));
     }
 
     @Test

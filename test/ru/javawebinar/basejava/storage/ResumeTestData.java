@@ -7,12 +7,39 @@ import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import static ru.javawebinar.basejava.model.SectionType.*;
 
 public class ResumeTestData {
+    private static final String UUID_1 = UUID.randomUUID().toString();
+    private static final String UUID_2 = UUID.randomUUID().toString();
+    private static final String UUID_3 = UUID.randomUUID().toString();
+    private static final String UUID_4 = UUID.randomUUID().toString();
+    private static final String UUID_5 = UUID.randomUUID().toString();
+
+    private static final String FULL_NAME_1 = "Alex Smith";
+    private static final String FULL_NAME_2 = "Boris Blade";
+    private static final String FULL_NAME_3 = "Roman Smith";
+    private static final String FULL_NAME_4 = "fullname";
+    private static final String FULL_NAME_5 = "jsontest";
+
+    public static final Resume RESUME_1;
+    public static final Resume RESUME_2;
+    public static final Resume RESUME_3;
+    public static final Resume RESUME_4;
+    public static final Resume RESUME_5;
+
+    static {
+        RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
+        RESUME_2 = getResumeWithoutOrganizationSection(UUID_2, FULL_NAME_2);
+        RESUME_3 = getResumeWithoutOrganizationSection(UUID_3, FULL_NAME_3);
+        RESUME_4 = getResumeWithoutOrganizationSection(UUID_4, FULL_NAME_4);
+        RESUME_5 = getResume(UUID_5, FULL_NAME_5);
+    }
+
     public static void main(String[] args) {
-        Resume resume = getResume("Roman Kovalenko");
+        Resume resume = getResume(UUID_1, "Roman Kovalenko");
         System.out.println(resume);
 
         System.out.println("--------------------------------------------");
@@ -32,8 +59,8 @@ public class ResumeTestData {
         System.out.println("-----------------END RESUME------------------------------");
     }
 
-    public static Resume getResume(String fullName) {
-        Resume resume = new Resume(fullName);
+    public static Resume getResume(String uuid, String fullName) {
+        Resume resume = new Resume(uuid, fullName);
 
         resume.setSection(PERSONAL, new StringSection("personal"));
         resume.setSection(OBJECTIVE, new StringSection("objective"));
@@ -97,31 +124,6 @@ public class ResumeTestData {
         experiences.add(exp2);
         experiences.add(exp3);
         resume.setSection(EXPERIENCE, new OrganizationSection(experiences));
-        return resume;
-    }
-
-    public static Resume getResumeWithOnlyFullContactsSection(String uuid, String fullName) {
-        Resume resume = new Resume(uuid, fullName);
-
-        resume.setContact(ContactType.PHONE, "phone");
-        resume.setContact(ContactType.MOBILE, "mobile");
-        resume.setContact(ContactType.HOME_PHONE, "home_phone");
-        resume.setContact(ContactType.SKYPE, "skype");
-        resume.setContact(ContactType.MAIL, "mail");
-        resume.setContact(ContactType.LINKEDIN, "linkeddin");
-        resume.setContact(ContactType.GITHUB, "github");
-        resume.setContact(ContactType.STACKOVERFLOW, "stackoverflow");
-        resume.setContact(ContactType.HOME_PAGE, "homepage");
-
-        return resume;
-    }
-
-    public static Resume getResumeWithOnlyPartContactsSection(String uuid, String fullName) {
-        Resume resume = new Resume(uuid, fullName);
-
-        resume.setContact(ContactType.PHONE, "+78002225888");
-        resume.setContact(ContactType.MAIL, "mail@mail");
-
         return resume;
     }
 
