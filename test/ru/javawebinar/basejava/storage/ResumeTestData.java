@@ -33,8 +33,8 @@ public class ResumeTestData {
     static {
         RESUME_1 = new Resume(UUID_1, FULL_NAME_1);
         RESUME_2 = getResumeWithoutOrganizationSection(UUID_2, FULL_NAME_2);
-        RESUME_3 = getResumeWithoutOrganizationSection(UUID_3, FULL_NAME_3);
-        RESUME_4 = getResumeWithoutOrganizationSection(UUID_4, FULL_NAME_4);
+        RESUME_3 = getResume(UUID_3, FULL_NAME_3);
+        RESUME_4 = getResume(UUID_4, FULL_NAME_4);
         RESUME_5 = getResume(UUID_5, FULL_NAME_5);
     }
 
