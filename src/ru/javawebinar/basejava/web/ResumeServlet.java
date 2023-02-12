@@ -29,8 +29,16 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume r = storage.get(uuid);
-        r.setFullName(fullName);
+
+        final boolean isCreated = (uuid == null || uuid.length() == 0);
+        Resume r;
+        if (isCreated) {
+            r = new Resume(fullName);
+        } else {
+            r = storage.get(uuid);
+            r.setFullName(fullName);
+        }
+
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (HtmlUtil.isEmpty(value)) {
@@ -72,6 +80,7 @@ public class ResumeServlet extends HttpServlet {
                                         positions.add(new Organization.Position(DateUtil.parse(startDates[j]), DateUtil.parse(endDates[j]), titles[j], descriptions[j]));
                                     }
                                 }
+                                //TODO: delete duplicate organizations with same link
                                 orgs.add(new Organization(new Link(name, urls[i]), positions));
                             }
                         }
@@ -80,7 +89,11 @@ public class ResumeServlet extends HttpServlet {
                 }
             }
         }
-        storage.update(r);
+        if (isCreated) {
+            storage.save(r);
+        } else {
+            storage.update(r);
+        }
         response.sendRedirect("resume");
     }
 
@@ -100,6 +113,9 @@ public class ResumeServlet extends HttpServlet {
                 return;
             case "view":
                 r = storage.get(uuid);
+                break;
+            case "add":
+                r = Resume.EMPTY;
                 break;
             case "edit":
                 r = storage.get(uuid);
